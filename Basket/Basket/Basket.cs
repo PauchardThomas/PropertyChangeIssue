@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using Xamarin.Forms;
 
 namespace Basket
 {
@@ -11,6 +12,11 @@ namespace Basket
         public Basket()
         {
             Products = new ObservableCollection<Product>();
+            MessagingCenter.Subscribe<object>(this, "Hi", (e) =>
+            {
+                Console.WriteLine("Event triggered");
+                RaisePropertyChanged(nameof(Total));
+            });
         }
         ObservableCollection<Product> _Products;
         public ObservableCollection<Product> Products { get => _Products; set => SetProperty(ref _Products, value); }
@@ -39,7 +45,11 @@ namespace Basket
         {
             get => _Value; set
             {
-                SetProperty(ref _Value, value);
+              //  if(value > 0 && value < 10)
+              //  {
+                    SetProperty(ref _Value, value);
+                    MessagingCenter.Send<object>(this, "Hi");
+              //  }
             }
         }
     }

@@ -6,13 +6,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
     <StackLayout>
+        <Button Command="{Binding AddCommand}" Text="New" />
         <Label Text="Hello !" />
         <Label Text="{Binding Basket.Total, Mode=TwoWay}" />
         <StackLayout BindableLayout.ItemsSource="{Binding Basket.Products}">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
                     <StackLayout>
-                        <Entry Text="{Binding Value}" />
+                        <Entry Text="{Binding Value, Mode=TwoWay}" />
                     </StackLayout>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
