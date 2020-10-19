@@ -1,4 +1,5 @@
 ﻿using Prism.Mvvm;
+using Prism.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,19 +8,26 @@ using Xamarin.Forms;
 
 namespace Basket
 {
-    public class Basket : BindableBase
+    public class Basket : BindableBase/*, IDestructible*/
     {
-        public Basket()
+        public Basket(string nom)
         {
             Products = new ObservableCollection<Product>();
-            MessagingCenter.Subscribe<object>(this, "Hi", (e) =>
+            Nom = nom;
+           /* MessagingCenter.Subscribe<object>(this, "Hi", (e) =>
             {
                 Console.WriteLine("Event triggered");
                 RaisePropertyChanged(nameof(Total));
-            });
+            });*/
         }
         ObservableCollection<Product> _Products;
         public ObservableCollection<Product> Products { get => _Products; set => SetProperty(ref _Products, value); }
+        private string _Nom;
+        public string Nom
+        {
+            get { return _Nom; }
+            set { _Nom = value; }
+        }
 
         public int Total { get => GetTotal(); }
 
@@ -32,6 +40,11 @@ namespace Basket
             }
             return total;
         }
+
+       /* public void Destroy()
+        {
+            MessagingCenter.Unsubscribe<object>(this, "Hi");
+        }*/
     }
 
     public class Product : BindableBase
@@ -48,7 +61,7 @@ namespace Basket
               //  if(value > 0 && value < 10)
               //  {
                     SetProperty(ref _Value, value);
-                    MessagingCenter.Send<object>(this, "Hi");
+                 //   MessagingCenter.Send<object>(this, "Hi");
               //  }
             }
         }

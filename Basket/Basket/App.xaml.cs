@@ -1,16 +1,18 @@
-﻿using System;
+﻿using Prism;
+using Prism.Ioc;
+using Prism.Unity;
+using Sharpnado.Tasks;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Basket
 {
-    public partial class App : Application
+    public partial class App : PrismApplication
     {
-        public App()
+        public App(IPlatformInitializer initializer = null) : base(initializer)
         {
-            InitializeComponent();
-
-            MainPage = new MainPage();
+            Xamarin.Essentials.VersionTracking.Track();
         }
 
         protected override void OnStart()
@@ -23,6 +25,20 @@ namespace Basket
 
         protected override void OnResume()
         {
+        }
+
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterForNavigation<MainPage,MainPageViewModel>();
+
+            containerRegistry.Register<BasketReader>();
+        }
+
+        protected override void OnInitialized()
+        {
+            InitializeComponent();
+
+            TaskMonitor.Create(NavigationService.NavigateAsync($"/{nameof(MainPage)}"));
         }
     }
 }

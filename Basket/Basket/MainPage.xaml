@@ -2,22 +2,55 @@
 <ContentPage x:Class="Basket.MainPage"
              xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:Basket"
+             xmlns:customviews="clr-namespace:Sharpnado.Presentation.Forms.CustomViews;assembly=Sharpnado.TaskLoaderView"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d">
     <StackLayout>
-        <Button Command="{Binding AddCommand}" Text="New" />
-        <Label Text="Hello !" />
-        <Label Text="{Binding Basket.Total, Mode=TwoWay}" />
-        <StackLayout BindableLayout.ItemsSource="{Binding Basket.Products}">
-            <BindableLayout.ItemTemplate>
-                <DataTemplate>
-                    <StackLayout>
-                        <Entry Text="{Binding Value, Mode=TwoWay}" />
-                    </StackLayout>
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
-        </StackLayout>
+        <Button Command="{Binding AddCommand}" Text="New">
+            <Button.Triggers>
+                <DataTrigger Binding="{Binding AddCommand.Notifier.ShowLoader}" TargetType="Button" Value="True">
+                    <Setter Property="Text" Value="Ajout en cours..." />
+                    <Setter Property="FontAttributes" Value="Italic" />
+                </DataTrigger>
+            </Button.Triggers>
+        </Button>
+        <Button Command="{Binding ShowBasketCommand}" IsEnabled="{Binding ShowBasketCommand.Notifier.IsCompleted}" Text="Show basket 1" />
+        <Button Command="{Binding ShowBasketCommand}" IsEnabled="{Binding ShowBasketCommand.Notifier.IsCompleted}" Text="Show basket 2" />
+
+        <!--<controls:CheckBox BackgroundColor="Red" HeightRequest="50" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" WidthRequest="50" />-->
+        <!--<CheckBox HorizontalOptions="Center" IsChecked="True" VerticalOptions="Center" Color="Green" />-->
+        <Label Text="{Binding Basket.Nom, Mode=TwoWay}" />
+        <Label Text="{Binding Basket.Products.Count}" />
+        <customviews:TaskLoaderView BackgroundColor="Red" TaskLoaderNotifier="{Binding ShowBasketCommand.Notifier}" TaskLoaderType="Normal">
+            <customviews:TaskLoaderView.LoadingView>
+                <StackLayout AbsoluteLayout.LayoutBounds="0.5, 0.5,54,54" AbsoluteLayout.LayoutFlags="PositionProportional" BackgroundColor="Blue">
+                    <ActivityIndicator IsRunning="{Binding ShowBasketCommand.Notifier.ShowLoader}" />
+                </StackLayout>
+            </customviews:TaskLoaderView.LoadingView>
+
+            <customviews:TaskLoaderView.NotStartedView>
+                <Label HorizontalOptions="Center" Text="Not started" VerticalOptions="Center" />
+            </customviews:TaskLoaderView.NotStartedView>
+
+            <ScrollView>
+                <Grid BindableLayout.ItemsSource="{Binding Basket.Products}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="controls:Product">
+                            <Entry Text="{Binding Value, Mode=TwoWay}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </Grid>
+            </ScrollView>
+        </customviews:TaskLoaderView>
+        <!--<ActivityIndicator HorizontalOptions="Center" IsEnabled="True" IsRunning="True" IsVisible="False" VerticalOptions="Center">
+            <ActivityIndicator.Triggers>
+                <DataTrigger Binding="{Binding IsLoading}" TargetType="ActivityIndicator" Value="true">
+                    <Setter Property="IsVisible" Value="True" />
+                </DataTrigger>
+            </ActivityIndicator.Triggers>
+        </ActivityIndicator>-->
     </StackLayout>
 
 </ContentPage>
